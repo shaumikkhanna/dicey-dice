@@ -115,11 +115,11 @@ async function rollDice() {
 			const gain = payout * invested;
 			winnings += gain;
 			roiTracker[label].returned += gain;
-			result += `✅ <${label}> paid ₹${formatMoney(gain)}\n`;
+			result += `✅ [${label}] paid ₹${formatMoney(gain)}\n`;
 		} else {
 			losses += invested;
 			money -= invested;
-			result += `❌ <${label}> lost ₹${formatMoney(invested)}\n`;
+			result += `❌ [${label}] lost ₹${formatMoney(invested)}\n`;
 		}
 	}
 
