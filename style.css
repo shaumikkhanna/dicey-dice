@@ -159,3 +159,54 @@ pre {
 .popup-btn.cancel:hover {
 	background-color: #f5b9b9;
 }
+
+.main-layout {
+	display: flex;
+	gap: 4px; /* reduced from 20px */
+	align-items: flex-start;
+	justify-content: center;
+	padding: 1rem;
+	flex-wrap: wrap;
+}
+
+.sidebar {
+	flex: 0 0 220px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.sidebar button {
+	margin: 6px 0; /* top-bottom spacing */
+	width: 100%;
+	max-width: 180px;
+}
+
+.sidebar.left {
+	text-align: left;
+}
+
+.sidebar.right {
+	text-align: left;
+	flex: 0 0 360px; /* match or exceed log width */
+}
+
+.board {
+	flex: 1 1 500px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	max-width: 600px;
+}
+
+pre#log {
+	background: #f9f4f0;
+	padding: 12px;
+	border-radius: 8px;
+	height: 460px; /* was 400px */
+	width: 360px; /* was 220px */
+	overflow-y: auto;
+	white-space: pre-wrap;
+	font-size: 0.92rem;
+}

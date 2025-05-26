@@ -73,8 +73,17 @@ function renderBoard() {
 					: "");
 			div.onclick = () => {
 				if (gameEnded) return;
-				currentBetLabel = space.label;
+
 				const currentBet = bids[space.label] || 0;
+				const isNewBet = !bids.hasOwnProperty(space.label);
+
+				// Check if they are trying to place a new token beyond the limit
+				if (isNewBet && tokensUsed >= 3) {
+					alert("You can only place tokens on up to 3 spaces.");
+					return;
+				}
+
+				currentBetLabel = space.label;
 				popupInput.value = currentBet || 1000;
 				popupLabel.innerHTML = `How much do you want to bet on <b>${
 					space.label

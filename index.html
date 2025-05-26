@@ -7,23 +7,35 @@
 		<title>Dicey Dice - Single Player</title>
 	</head>
 	<body>
-		<h1>Dicey Dice</h1>
-		<div class="status">
-			<strong>Round:</strong> <span id="round">1</span>/10
-		</div>
-		<div class="status">
-			<strong>Tokens Used:</strong> <span id="tokens-used">0</span>/3
-		</div>
-		<div class="status">
-			<strong>Money in the bank:</strong> ₹<span id="money">3000</span>
-		</div>
+		<div class="main-layout">
+			<div class="sidebar left">
+				<h1>Dicey Dice</h1>
+				<div class="status">
+					<strong>Round:</strong> <span id="round">1</span>/10
+				</div>
+				<div class="status">
+					<strong>Tokens Used:</strong>
+					<span id="tokens-used">0</span>/3
+				</div>
+				<div class="status">
+					<strong>Money:</strong> ₹<span id="money">3000</span>
+				</div>
 
-		<div class="board" id="board"></div>
+				<button id="roll-btn" onclick="rollDice()">
+					Confirm Bets and 🎲 Roll Dice
+				</button>
+				<button id="reset-btn" onclick="resetRound()">
+					♻️ Reset Bets
+				</button>
+			</div>
 
-		<button id="roll-btn" onclick="rollDice()">
-			🎲 Confirm Bets & Roll Dice
-		</button>
-		<button id="reset-btn" onclick="resetRound()">♻️ Reset Bets</button>
+			<div class="board" id="board"></div>
+
+			<div class="sidebar right">
+				<h2>Log</h2>
+				<pre id="log"></pre>
+			</div>
+		</div>
 		<audio
 			id="dice-sound"
 			src="sounds/dice-roll.mp3"
@@ -48,10 +60,6 @@
 				</div>
 			</div>
 		</div>
-
-		<h2>Log</h2>
-		<pre id="log"></pre>
-
 		<script src="script.js"></script>
 	</body>
 </html>
