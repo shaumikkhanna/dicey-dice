@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="css/style-multi.css" />
+		<title>Dicey Dice - Single Player</title>
+	</head>
+	<body>
+		<div class="main-layout">
+			<div class="sidebar left">
+				<h1>Dicey Dice</h1>
+				<div class="status">
+					<strong>Round:</strong> <span id="round">1</span>/10
+				</div>
+				<div id="player-stats"></div>
+
+				<button id="roll-btn" onclick="rollDice()">
+					Confirm Bets and 🎲 Roll Dice
+				</button>
+				<button id="reset-btn" onclick="resetRound()">
+					♻️ Reset Bets
+				</button>
+			</div>
+
+			<div>
+				<div class="player-buttons" id="player-buttons"></div>
+				<div class="board" id="board"></div>
+			</div>
+
+			<div class="sidebar right">
+				<h2>Log</h2>
+				<pre id="log"></pre>
+			</div>
+		</div>
+		<audio
+			id="dice-sound"
+			src="sounds/dice-roll.mp3"
+			preload="auto"
+		></audio>
+
+		<div id="popup" class="popup hidden">
+			<div class="popup-content">
+				<p id="popup-label">How much do you want to bet on:</p>
+				<input
+					type="number"
+					id="popup-input"
+					step="1000"
+					min="1000"
+					value="1000"
+				/>
+				<div class="popup-actions">
+					<button class="popup-btn" id="popup-confirm">✅ Bet</button>
+					<button class="popup-btn cancel" id="popup-cancel">
+						❌ Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+		<script>
+			// Get player count from URL
+			const urlParams = new URLSearchParams(window.location.search);
+			window.numPlayers = parseInt(urlParams.get("players")) || 2;
+		</script>
+		<script src="js/script-multi.js"></script>
+	</body>
+</html>

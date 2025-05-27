@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="css/style-single.css" />
+		<title>Dicey Dice - Single Player</title>
+	</head>
+	<body>
+		<div class="main-layout">
+			<div class="sidebar left">
+				<h1>Dicey Dice</h1>
+				<div class="status">
+					<strong>Round:</strong> <span id="round">1</span>/10
+				</div>
+				<div class="status">
+					<strong>Tokens Used:</strong>
+					<span id="tokens-used">0</span>/3
+				</div>
+				<div class="status">
+					<strong>Money:</strong> ₹<span id="money">3000</span>
+				</div>
+
+				<button id="roll-btn" onclick="rollDice()">
+					Confirm Bets and 🎲 Roll Dice
+				</button>
+				<button id="reset-btn" onclick="resetRound()">
+					♻️ Reset Bets
+				</button>
+			</div>
+
+			<div class="board" id="board"></div>
+
+			<div class="sidebar right">
+				<h2>Log</h2>
+				<pre id="log"></pre>
+			</div>
+		</div>
+		<audio
+			id="dice-sound"
+			src="sounds/dice-roll.mp3"
+			preload="auto"
+		></audio>
+
+		<div id="popup" class="popup hidden">
+			<div class="popup-content">
+				<p id="popup-label">How much do you want to bet on:</p>
+				<input
+					type="number"
+					id="popup-input"
+					step="1000"
+					min="1000"
+					value="1000"
+				/>
+				<div class="popup-actions">
+					<button class="popup-btn" id="popup-confirm">✅ Bet</button>
+					<button class="popup-btn cancel" id="popup-cancel">
+						❌ Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+		<script src="js/script-single.js"></script>
+	</body>
+</html>
