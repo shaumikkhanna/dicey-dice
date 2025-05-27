@@ -23,8 +23,8 @@ const popupInput = document.getElementById("popup-input");
 const popupConfirm = document.getElementById("popup-confirm");
 const popupCancel = document.getElementById("popup-cancel");
 
-let money = 3000;
-let initialMoney = 3000;
+let money = 10000;
+let initialMoney = 10000;
 let tokensUsed = 0;
 const bids = {};
 let round = 1;
