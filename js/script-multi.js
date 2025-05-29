@@ -9,11 +9,11 @@ const spaces = [
 	{ label: "6", payout: 6 },
 	{ label: "8", payout: 6 },
 	{ label: "7", payout: 5 },
-	{ label: "Over 7", payout: 2 },
+	{ label: "12", payout: 30 },
 	{ label: "Under 7", payout: 2 },
+	{ label: "Over 7", payout: 2 },
 	{ label: "Odd", payout: 2 },
 	{ label: "Even", payout: 2 },
-	{ label: "12", payout: 30 },
 ];
 
 let currentBetLabel = null;
@@ -80,20 +80,28 @@ function renderBoard() {
 		.sort((a, b) => b.payout - a.payout)
 		.forEach((space) => {
 			const div = document.createElement("div");
-			const size = Math.min(22, 12 + space.payout);
 			const lightness = 90 - space.payout * 1.5;
 			div.className = "space";
-			div.style.fontSize = size + "px";
+			div.style.fontSize = "1.8rem";
+			div.style.padding = "12px 8px";
 			div.style.flex = `1 1 ${80 + space.payout * 3}px`;
+			div.style.minHeight = "90px"; // taller blocks
 			div.style.backgroundColor = `hsl(30, 100%, ${lightness}%)`;
 			if (player.bids[space.label]) div.classList.add("selected");
-			div.innerHTML =
-				`<strong>${space.label}</strong><br/>(${space.payout}:1)` +
-				(player.bids[space.label]
-					? `<div class="bet-amount">₹${formatMoney(
-							player.bids[space.label]
-					  )}</div>`
-					: "");
+			let betInfo = "";
+			players.forEach((p, i) => {
+				if (p.bids[space.label]) {
+					betInfo += `<div class="bet-amount">Player ${
+						i + 1
+					}: ₹${formatMoney(p.bids[space.label])}</div>`;
+				}
+			});
+
+			div.innerHTML = `
+				<strong>${space.label}</strong><br/>
+				(${space.payout}:1)
+				${betInfo}
+			`;
 			div.onclick = () => {
 				if (gameEnded) return;
 
@@ -167,11 +175,29 @@ async function rollDice() {
 	diceSound.currentTime = 0;
 	diceSound.play();
 
-	await delay(1000);
+	// Animate dice rolling
+	const dice1Img = document.getElementById("dice1");
+	const dice2Img = document.getElementById("dice2");
 
+	for (let i = 0; i < 8; i++) {
+		const temp1 = Math.ceil(Math.random() * 6);
+		const temp2 = Math.ceil(Math.random() * 6);
+		dice1Img.src = `images/dice-${temp1}.png`;
+		dice2Img.src = `images/dice-${temp2}.png`;
+		dice1Img.style.transform = `rotate(${Math.random() * 360}deg)`;
+		dice2Img.style.transform = `rotate(${Math.random() * 360}deg)`;
+		await delay(100); // 100ms between frames
+	}
+
+	// Final result
 	const d1 = Math.ceil(Math.random() * 6);
 	const d2 = Math.ceil(Math.random() * 6);
 	const total = d1 + d2;
+
+	dice1Img.src = `images/dice-${d1}.png`;
+	dice2Img.src = `images/dice-${d2}.png`;
+	dice1Img.style.transform = `rotate(0deg)`;
+	dice2Img.style.transform = `rotate(0deg)`;
 
 	appendLog(`→ Dice rolled: ${d1} + ${d2} = ${total}`);
 	await delay(1000);
@@ -337,13 +363,15 @@ function allPlayersReady() {
 }
 
 appendLog(`Welcome to Dicey Dice!
-You start with ₹3,000 and 3 tokens. You can bet on outcomes like totals from 2–12 or properties like Over 7, Odd, Even.
+You start with ₹10,000 and 3 tokens. You can bet on outcomes like totals from 2–12 or properties like Over 7, Odd, Even.
 Each bet can be any multiple of ₹1,000—even if you don't have enough money!
 Choose up to 3 spots each round. The game runs for 10 rounds. Highest money wins!
 ---`);
 
-updateDisplay();
-renderBoard();
-createPlayerButtons();
-switchPlayer(0);
-rollBtn.disabled = true;
+window.addEventListener("DOMContentLoaded", () => {
+	updateDisplay();
+	renderBoard();
+	createPlayerButtons?.();
+	switchPlayer?.(0);
+	rollBtn.disabled = true;
+});

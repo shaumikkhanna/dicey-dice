@@ -12,12 +12,13 @@ h3 {
 	margin: 0.5em 0;
 }
 .board {
+	margin: 20px auto;
+	flex: 1 1 500px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 10px;
-	margin: 20px auto;
-	max-width: 800px;
+	max-width: 600px;
 }
 .space {
 	padding: 12px;
@@ -77,9 +78,10 @@ pre {
 	font-weight: bold;
 }
 .bet-amount {
-	font-size: 0.9rem;
-	color: #006400;
-	margin-top: 4px;
+	font-size: 0.85rem;
+	color: #333;
+	text-align: center;
+	margin: 2px 0;
 }
 .popup {
 	position: fixed;
@@ -162,7 +164,7 @@ pre {
 
 .main-layout {
 	display: flex;
-	gap: 14px; /* reduced from 20px */
+	gap: 12px; /* reduced from 20px */
 	align-items: flex-start;
 	justify-content: center;
 	padding: 1rem;
@@ -189,15 +191,6 @@ pre {
 .sidebar.right {
 	text-align: left;
 	flex: 0 0 360px; /* match or exceed log width */
-}
-
-.board {
-	flex: 1 1 500px;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 10px;
-	max-width: 600px;
 }
 
 pre#log {
@@ -246,4 +239,18 @@ pre#log {
 	gap: 6px;
 	margin-top: 1rem;
 	font-size: 1rem;
+}
+
+.dice-display {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.dice-img {
+	width: 80px;
+	height: 80px;
+	transition: transform 0.2s ease;
 }

@@ -9,11 +9,11 @@ const spaces = [
 	{ label: "6", payout: 6 },
 	{ label: "8", payout: 6 },
 	{ label: "7", payout: 5 },
-	{ label: "Over 7", payout: 2 },
+	{ label: "12", payout: 30 },
 	{ label: "Under 7", payout: 2 },
+	{ label: "Over 7", payout: 2 },
 	{ label: "Odd", payout: 2 },
 	{ label: "Even", payout: 2 },
-	{ label: "12", payout: 30 },
 ];
 
 let currentBetLabel = null;
@@ -57,27 +57,35 @@ function renderBoard() {
 		.sort((a, b) => b.payout - a.payout)
 		.forEach((space) => {
 			const div = document.createElement("div");
-			const size = Math.min(22, 12 + space.payout);
 			const lightness = 90 - space.payout * 1.5;
+
 			div.className = "space";
-			div.style.fontSize = size + "px";
+			div.style.fontSize = "1.8rem";
+			div.style.padding = "12px 8px";
 			div.style.flex = `1 1 ${80 + space.payout * 3}px`;
+			div.style.minHeight = "90px"; // taller blocks
 			div.style.backgroundColor = `hsl(30, 100%, ${lightness}%)`;
+
 			if (bids[space.label]) div.classList.add("selected");
-			div.innerHTML =
-				`<strong>${space.label}</strong><br/>(${space.payout}:1)` +
-				(bids[space.label]
-					? `<div class="bet-amount">₹${formatMoney(
-							bids[space.label]
-					  )}</div>`
-					: "");
+
+			const betInfo = bids[space.label]
+				? `<div class="bet-amount">₹${formatMoney(
+						bids[space.label]
+				  )}</div>`
+				: "";
+
+			div.innerHTML = `
+				<strong>${space.label}</strong><br/>
+				(${space.payout}:1)
+				${betInfo}
+			`;
+
 			div.onclick = () => {
 				if (gameEnded) return;
 
 				const currentBet = bids[space.label] || 0;
 				const isNewBet = !bids.hasOwnProperty(space.label);
 
-				// Check if they are trying to place a new token beyond the limit
 				if (isNewBet && tokensUsed >= 3) {
 					alert("You can only place tokens on up to 3 spaces.");
 					return;
@@ -90,6 +98,7 @@ function renderBoard() {
 				}</b>?<br>(Current bet: ₹${formatMoney(currentBet)})`;
 				popup.classList.remove("hidden");
 			};
+
 			boardDiv.appendChild(div);
 		});
 }
@@ -104,11 +113,29 @@ async function rollDice() {
 	diceSound.currentTime = 0;
 	diceSound.play();
 
-	await delay(1000);
+	const dice1Img = document.getElementById("dice1");
+	const dice2Img = document.getElementById("dice2");
 
+	// Animate rolling
+	for (let i = 0; i < 8; i++) {
+		const temp1 = Math.ceil(Math.random() * 6);
+		const temp2 = Math.ceil(Math.random() * 6);
+		dice1Img.src = `images/dice-${temp1}.png`;
+		dice2Img.src = `images/dice-${temp2}.png`;
+		dice1Img.style.transform = `rotate(${Math.random() * 360}deg)`;
+		dice2Img.style.transform = `rotate(${Math.random() * 360}deg)`;
+		await delay(100);
+	}
+
+	// Final roll
 	const d1 = Math.ceil(Math.random() * 6);
 	const d2 = Math.ceil(Math.random() * 6);
 	const total = d1 + d2;
+
+	dice1Img.src = `images/dice-${d1}.png`;
+	dice2Img.src = `images/dice-${d2}.png`;
+	dice1Img.style.transform = `rotate(0deg)`;
+	dice2Img.style.transform = `rotate(0deg)`;
 
 	appendLog(`→ You rolled: ${d1} + ${d2} = ${total}`);
 	await delay(1000);
@@ -246,10 +273,12 @@ popupCancel.onclick = () => {
 };
 
 appendLog(`Welcome to Dicey Dice!
-You start with ₹3,000 and 3 tokens. You can bet on outcomes like totals from 2–12 or properties like Over 7, Odd, Even.
+You start with ₹10,000 and 3 tokens. You can bet on outcomes like totals from 2–12 or properties like Over 7, Odd, Even.
 Each bet can be any multiple of ₹1,000—even if you don't have enough money!
 Choose up to 3 spots each round. The game runs for 10 rounds. Highest money wins!
 ---`);
 
-updateDisplay();
-renderBoard();
+window.addEventListener("DOMContentLoaded", () => {
+	updateDisplay();
+	renderBoard();
+});
