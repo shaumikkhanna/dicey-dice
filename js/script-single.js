@@ -149,9 +149,9 @@ async function rollDice() {
 		roiTracker[label].invested += invested;
 		if (payout > 0) {
 			const gain = payout * invested;
-			winnings += gain;
+			winnings += gain - invested;
 			roiTracker[label].returned += gain;
-			result += `✅ [${label}] paid ₹${formatMoney(gain)}\n`;
+			result += `✅ [${label}] paid ₹${formatMoney(gain - invested)}\n`;
 		} else {
 			losses += invested;
 			money -= invested;
