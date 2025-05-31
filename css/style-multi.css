@@ -254,3 +254,7 @@ pre#log {
 	height: 80px;
 	transition: transform 0.2s ease;
 }
+
+.invalid-input {
+	border: 2px solid red;
+}

@@ -92,10 +92,16 @@ function renderBoard() {
 				}
 
 				currentBetLabel = space.label;
+				const roundLimit = money >= 0 ? money + 10000 : 10000;
+
 				popupInput.value = currentBet || 1000;
-				popupLabel.innerHTML = `How much do you want to bet on <b>${
-					space.label
-				}</b>?<br>(Current bet: ₹${formatMoney(currentBet)})`;
+				popupLabel.innerHTML = `
+					How much do you want to bet on <b>${space.label}</b>?<br>
+					(Current bet: ₹${formatMoney(currentBet)})<br>
+					<span style="color: gray; font-size: 0.9rem;">
+						Total bet limit (this round): ₹${formatMoney(roundLimit)}.
+					</span>
+				`;
 				popup.classList.remove("hidden");
 			};
 
@@ -257,15 +263,34 @@ function getTheoreticalProbability(label) {
 
 popupConfirm.onclick = () => {
 	const value = parseInt(popupInput.value);
-	if (!isNaN(value) && value > 0 && value % 1000 === 0) {
-		if (!bids[currentBetLabel]) tokensUsed++;
-		bids[currentBetLabel] = value;
-		updateDisplay();
-		renderBoard();
-		popup.classList.add("hidden");
-	} else {
-		alert("Enter a valid amount in ₹1000 multiples.");
+	const currentBet = bids[currentBetLabel] || 0;
+	const newTokensUsed = bids[currentBetLabel] ? tokensUsed : tokensUsed + 1;
+
+	// Calculate total so far (excluding current space)
+	let totalSoFar = 0;
+	for (const label in bids) {
+		if (label !== currentBetLabel) totalSoFar += bids[label];
 	}
+	const proposedTotal = totalSoFar + value;
+
+	const roundLimit = money >= 0 ? money + 10000 : 10000;
+
+	if (isNaN(value) || value <= 0 || value % 1000 !== 0) {
+		alert("Enter a valid amount in ₹1000 multiples.");
+		return;
+	}
+
+	if (proposedTotal > roundLimit) {
+		alert(`You can bet only ₹${formatMoney(roundLimit)} this round.`);
+		return;
+	}
+
+	if (!bids[currentBetLabel]) tokensUsed++;
+	bids[currentBetLabel] = value;
+
+	updateDisplay();
+	renderBoard();
+	popup.classList.add("hidden");
 };
 
 popupCancel.onclick = () => {

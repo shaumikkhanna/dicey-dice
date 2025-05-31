@@ -114,10 +114,18 @@ function renderBoard() {
 				}
 
 				currentBetLabel = space.label;
+
+				const money = player.money;
+				const roundLimit = money >= 0 ? money + 10000 : 10000;
+
 				popupInput.value = currentBet || 1000;
-				popupLabel.innerHTML = `How much do you want to bet on <b>${
-					space.label
-				}</b>?<br>(Current bet: ₹${formatMoney(currentBet)})`;
+				popupLabel.innerHTML = `
+		How much do you want to bet on <b>${space.label}</b>?<br>
+		(Current bet: ₹${formatMoney(currentBet)})<br>
+		<span style="color: gray; font-size: 0.9rem;">
+			Total bet limit (this round): ₹${formatMoney(roundLimit)}.
+		</span>
+	`;
 				popup.classList.remove("hidden");
 			};
 			boardDiv.appendChild(div);
@@ -145,15 +153,36 @@ function updateDisplay() {
 popupConfirm.onclick = () => {
 	const value = parseInt(popupInput.value);
 	const player = players[currentPlayerIndex];
+
 	if (!isNaN(value) && value > 0 && value % 1000 === 0) {
-		if (!player.bids[currentBetLabel]) player.tokensUsed++;
+		const isNewBet = !player.bids.hasOwnProperty(currentBetLabel);
+		const currentTotal = Object.values(player.bids).reduce(
+			(sum, val) => sum + val,
+			0
+		);
+		const existing = player.bids[currentBetLabel] || 0;
+		const newTotal = currentTotal - existing + value;
+		const money = player.money;
+		const limit = money >= 0 ? money + 10000 : 10000;
+
+		if (newTotal > limit) {
+			popupInput.classList.add("invalid-input");
+			return;
+		}
+
+		popupInput.classList.remove("invalid-input");
+
+		if (isNewBet && player.tokensUsed >= 3) {
+			alert("You can only place tokens on up to 3 spaces.");
+			return;
+		}
+
+		if (isNewBet) player.tokensUsed++;
 		player.bids[currentBetLabel] = value;
 		updateDisplay();
 		renderBoard();
 		highlightActivePlayer();
 		popup.classList.add("hidden");
-
-		// ✅ Enable roll button if all players have bet
 		rollBtn.disabled = !allPlayersReady();
 	} else {
 		alert("Enter a valid amount in ₹1000 multiples.");
